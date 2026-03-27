@@ -79,6 +79,7 @@ Supported agents:
 - **Claude Code** → copies into `~/.claude/skills/`
 - **Gemini CLI** → copies into `~/.gemini/skills/`
 - **OpenClaw** → copies into `~/.openclaw/skills/`
+- **Antigravity** → copies into `~/.gemini/antigravity/skills/`
 
 ## Validation
 

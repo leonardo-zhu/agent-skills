@@ -34,6 +34,7 @@ echo ""
 remove_from "$HOME/.claude/skills" "Claude Code"
 remove_from "$HOME/.gemini/skills" "Gemini CLI"
 remove_from "$HOME/.openclaw/skills" "OpenClaw"
+remove_from "$HOME/.gemini/antigravity/skills" "Antigravity"
 
 if [ "$REMOVED" -eq 0 ]; then
   yellow "No installed skills found — nothing to remove."

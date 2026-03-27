@@ -108,6 +108,9 @@ fi
 if [ -d "$HOME/.openclaw" ] || command -v openclaw &>/dev/null; then
   AGENTS+=("openclaw:$HOME/.openclaw/skills:OpenClaw")
 fi
+if [ -d "$HOME/.gemini/antigravity" ] || [ -d "$HOME/.antigravity" ]; then
+  AGENTS+=("antigravity:$HOME/.gemini/antigravity/skills:Antigravity")
+fi
 
 if [ "${#AGENTS[@]}" -eq 0 ]; then
   yellow "No supported agents detected."
