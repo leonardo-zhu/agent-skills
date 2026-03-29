@@ -48,7 +48,8 @@ Never use a personal PAT. Always:
 
 1. Call `mcp__gh-mcp__get_installation_token` first
 2. Use the returned Installation Access Token (IAT) as Bearer token for all REST and GraphQL requests
-3. **PR Merge Policy**: Always use `merge_method: "rebase"` when merging Pull Requests via API to maintain a clean, linear history. Avoid "merge" or "squash" unless explicitly requested.
+3. **Review Policy**: After creating a Pull Request, you MUST request a review from `@leonardo-zhu` and wait for explicit approval before merging.
+4. **PR Merge Policy**: Always use `merge_method: "rebase"` when merging Pull Requests via API to maintain a clean, linear history. Avoid "merge" or "squash" unless explicitly requested.
 
 App ID and Installation ID are pre-configured in the MCP server environment — no manual input needed.
 
