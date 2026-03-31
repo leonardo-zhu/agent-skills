@@ -1,6 +1,6 @@
 ---
 name: git-identity
-description: Use when performing any git operation (commit, push, rebase, merge, cherry-pick, amend) or any GitHub API interaction - ensures all operations use the bot identity instead of personal credentials
+description: Use when performing any git operation (commit, push, fetch, pull, rebase, merge, cherry-pick, amend) or any GitHub API interaction - ensures all operations use the bot identity instead of personal credentials
 ---
 
 # Git & GitHub Bot Identity
@@ -43,31 +43,51 @@ Apply to **every** git command without exception.
 
 Append your agent's Co-authored-by line (from the table above) to every commit message.
 
-## GitHub API
+## GitHub API & Remote Operations (Git Push)
 
-Never use a personal PAT. Always:
+Never use a personal PAT for API calls or remote Git operations (push/pull/fetch).
 
-1. Call `mcp__gh-mcp__get_installation_token` first
-2. Use the returned Installation Access Token (IAT) as Bearer token for all REST and GraphQL requests
-3. **Review Policy**: After creating a Pull Request, you MUST request a review from `@leonardo-zhu` and wait for explicit approval before merging.
-4. **PR Merge Policy**: Always use `merge_method: "rebase"` when merging Pull Requests via API to maintain a clean, linear history. Avoid "merge" or "squash" unless explicitly requested.
+### Authentication Flow
+
+1. **Get Token**: Call `mcp__gh-mcp__get_installation_token` to get an Installation Access Token (IAT).
+2. **API Calls**: Set `Authorization: Bearer <IAT>` for all REST/GraphQL requests.
+3. **Git Push/Fetch**: Treat these as GitHub platform operations. Use the IAT in the URL to ensure the bot identity is used and your personal PAT is not leaked.
+
+   ```bash
+   git push https://x-access-token:<IAT>@github.com/<owner>/<repo>.git <branch>
+   ```
+
+### Mental Model
+
+- **Local Git Commands** (commit, rebase, etc.): Use `git -c include.path={gitconfig}` + `GIT_COMMITTER_*` env vars. These affect the **author/committer metadata** on the commit objects.
+- **GitHub Platform Operations** (push, PRs, API): Use the **Installation Access Token (IAT)**. These affect the **authentication and authorization** with GitHub. 
+
+**CRITICAL**: `git push` is a platform interaction. Never rely on the system's global git credentials. Always use the IAT.
+
+### Policies
+
+- **Review Policy**: After creating a Pull Request, you MUST request a review from `@leonardo-zhu` and wait for explicit approval before merging.
+- **PR Merge Policy**: Always use `merge_method: "rebase"` when merging PRs via API.
 
 App ID and Installation ID are pre-configured in the MCP server environment — no manual input needed.
 
 ## Examples
 
-Replace `{gitconfig}` and `{co-authored-by}` with your row from the Per-Agent Configuration table above.
+Replace `{gitconfig}`, `{co-authored-by}`, and `<IAT>` with your values.
 
 ```bash
-# Commit
+# 1. Commit/Rebase/Merge (Local operations - need gitconfig and committer env)
 GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
 GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.com" \
 git -c include.path={gitconfig} commit \
   -m "feat: add feature" \
   -m "{co-authored-by}"
 
-# Rebase
+# Example for rebase/merge (sets committer)
 GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
 GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.com" \
-git -c include.path={gitconfig} rebase origin/master
+git -c include.path={gitconfig} rebase origin/main
+
+# 2. Push (Remote operation - needs IAT)
+git push https://x-access-token:<IAT>@github.com/leonardo-zhu/agent-skills.git main
 ```
