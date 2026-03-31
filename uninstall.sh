@@ -35,6 +35,7 @@ remove_from "$HOME/.claude/skills" "Claude Code"
 remove_from "$HOME/.gemini/skills" "Gemini CLI"
 remove_from "$HOME/.openclaw/skills" "OpenClaw"
 remove_from "$HOME/.gemini/antigravity/skills" "Antigravity"
+remove_from "$HOME/.codex/skills" "Codex CLI"
 
 if [ "$REMOVED" -eq 0 ]; then
   yellow "No installed skills found — nothing to remove."

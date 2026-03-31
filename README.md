@@ -80,6 +80,7 @@ Supported agents:
 - **Gemini CLI** → copies into `~/.gemini/skills/`
 - **OpenClaw** → copies into `~/.openclaw/skills/`
 - **Antigravity** → copies into `~/.gemini/antigravity/skills/`
+- **Codex CLI** → copies into `~/.codex/skills/`
 
 ## Validation
 

@@ -111,6 +111,9 @@ fi
 if [ -d "$HOME/.gemini/antigravity" ] || [ -d "$HOME/.antigravity" ]; then
   AGENTS+=("antigravity:$HOME/.gemini/antigravity/skills:Antigravity")
 fi
+if [ -d "$HOME/.codex" ]; then
+  AGENTS+=("codex:$HOME/.codex/skills:Codex CLI")
+fi
 
 if [ "${#AGENTS[@]}" -eq 0 ]; then
   yellow "No supported agents detected."

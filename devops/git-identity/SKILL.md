@@ -22,6 +22,7 @@ All git operations and GitHub API calls must use the `leonardo-github-assist[bot
 | Gemini CLI | `~/.gitconfig.gemini` | `Co-authored-by: Gemini CLI <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
 | OpenClaw | `~/.gitconfig.openclaw` | `Co-authored-by: OpenClaw <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
 | Antigravity | `~/.gitconfig.antigravity` | `Co-authored-by: Antigravity <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
+| Codex CLI | `~/.gitconfig.codex` | `Co-authored-by: Codex CLI <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
 
 ## Git Commands
 
