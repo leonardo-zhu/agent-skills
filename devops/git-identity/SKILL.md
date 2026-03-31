@@ -69,5 +69,5 @@ git -c include.path={gitconfig} commit \
 # Rebase
 GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
 GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.com" \
-git -c include.path={gitconfig} rebase origin/main
+git -c include.path={gitconfig} rebase origin/master
 ```
