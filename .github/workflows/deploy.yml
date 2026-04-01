@@ -2,44 +2,91 @@ name: Deploy Skills
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-agent-skills
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+      SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT }}
+      SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      RSYNC_DELETE: ${{ secrets.DEPLOY_RSYNC_DELETE }}
+
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH & Sync Files
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
-          SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      - name: Validate required secrets
         run: |
+          set -euo pipefail
+          : "${SSH_HOST:?missing DEPLOY_SSH_HOST}"
+          : "${SSH_USER:?missing DEPLOY_SSH_USER}"
+          : "${SSH_PRIVATE_KEY:?missing DEPLOY_SSH_PRIVATE_KEY}"
+          : "${DEPLOY_PATH:?missing DEPLOY_PATH}"
+
+      - name: Setup SSH key
+        run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
           printf "%s" "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          
-          ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "mkdir -p \"$DEPLOY_PATH\""
 
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete \
+      - name: Prepare SSH options
+        id: ssh_opts
+        run: |
+          set -euo pipefail
+          PORT="${SSH_PORT:-22}"
+          OPTS="-p ${PORT} -o BatchMode=yes -o ConnectTimeout=10 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          echo "port=${PORT}" >> "$GITHUB_OUTPUT"
+          echo "opts=${OPTS}" >> "$GITHUB_OUTPUT"
+
+      - name: Check SSH connectivity
+        run: |
+          set -euo pipefail
+          ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "echo '[ok] ssh connected'; uname -a"
+
+      - name: Ensure deploy path exists
+        run: |
+          set -euo pipefail
+          ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "mkdir -p \"$DEPLOY_PATH\""
+
+      - name: Sync files
+        run: |
+          set -euo pipefail
+
+          DELETE_FLAG=""
+          if [ "${RSYNC_DELETE:-false}" = "true" ]; then
+            DELETE_FLAG="--delete"
+          fi
+
+          rsync -az ${DELETE_FLAG} \
+            -e "ssh ${{ steps.ssh_opts.outputs.opts }}" \
             --exclude '.git/' \
             --exclude '.github/' \
             --exclude '.claude/' \
+            --exclude 'node_modules/' \
+            --exclude '.pnpm-store/' \
+            --exclude '.DS_Store' \
             ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
 
-      - name: Run Install Script on Server
-        env:
-          SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
-          SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      - name: Run install script on server
         run: |
-          ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" bash -s << 'EOF'
-            set -ex
+          set -euo pipefail
+          ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "DEPLOY_PATH='$DEPLOY_PATH' bash -s" << 'EOF'
+            set -euxo pipefail
             cd "$DEPLOY_PATH"
+            test -f install.sh
             chmod +x install.sh
             ./install.sh
           EOF
