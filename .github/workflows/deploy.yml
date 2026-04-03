@@ -20,6 +20,7 @@ jobs:
       SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
       SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
       DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      TARGET_HOME: ${{ secrets.DEPLOY_TARGET_HOME }}
       RSYNC_DELETE: ${{ secrets.DEPLOY_RSYNC_DELETE }}
 
     steps:
@@ -115,7 +116,7 @@ jobs:
           scp ${{ steps.ssh_opts.outputs.opts }} "$ARCHIVE_PATH" "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/.tmp/$ARCHIVE_NAME"
 
           # Extract into isolated release directory and switch symlink
-          ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "DEPLOY_PATH='$DEPLOY_PATH' RELEASE_ID='$RELEASE_ID' ARCHIVE_NAME='$ARCHIVE_NAME' bash -s" << 'EOF'
+          ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "DEPLOY_PATH='$DEPLOY_PATH' RELEASE_ID='$RELEASE_ID' ARCHIVE_NAME='$ARCHIVE_NAME' TARGET_HOME='$TARGET_HOME' bash -s" << 'EOF'
             set -euxo pipefail
             
             RELEASES_DIR="$DEPLOY_PATH/releases"
