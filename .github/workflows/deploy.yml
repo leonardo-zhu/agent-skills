@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 20
 
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
       SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT }}
       SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
