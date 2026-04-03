@@ -108,8 +108,11 @@ jobs:
           ARCHIVE_NAME="release-${RELEASE_ID}.tgz"
           ARCHIVE_PATH=".release/${ARCHIVE_NAME}"
           
-          # Transfer the archive to /tmp/ on the server
-          scp ${{ steps.ssh_opts.outputs.opts }} "$ARCHIVE_PATH" "$SSH_USER@$SSH_HOST:/tmp/$ARCHIVE_NAME"
+          # Create isolated .tmp directory for transfer
+          ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "mkdir -p \"$DEPLOY_PATH/.tmp\""
+
+          # Transfer the archive to .tmp/ on the server
+          scp ${{ steps.ssh_opts.outputs.opts }} "$ARCHIVE_PATH" "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/.tmp/$ARCHIVE_NAME"
 
           # Extract into isolated release directory and switch symlink
           ssh ${{ steps.ssh_opts.outputs.opts }} "$SSH_USER@$SSH_HOST" "DEPLOY_PATH='$DEPLOY_PATH' RELEASE_ID='$RELEASE_ID' ARCHIVE_NAME='$ARCHIVE_NAME' bash -s" << 'EOF'
@@ -124,13 +127,13 @@ jobs:
             mkdir -p "$RELEASE_DIR"
             
             # 2. Extract into the fresh directory (automatically missing deleted files!)
-            tar -xzf "/tmp/$ARCHIVE_NAME" -C "$RELEASE_DIR" --strip-components=1
+            tar -xzf "$DEPLOY_PATH/.tmp/$ARCHIVE_NAME" -C "$RELEASE_DIR" --strip-components=1
             
             # 3. Atomically switch the symlink to point to the new release
             ln -sfn "$RELEASE_DIR" "$CURRENT_LINK"
             
             # Clean up the payload
-            rm -f "/tmp/$ARCHIVE_NAME"
+            rm -f "$DEPLOY_PATH/.tmp/$ARCHIVE_NAME"
             
             # Execute install script from the NEW current directory
             cd "$CURRENT_LINK"

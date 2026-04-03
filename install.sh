@@ -99,20 +99,22 @@ echo ""
 
 # Determine which agents are present
 AGENTS=()
-if [ -d "$HOME/.claude" ]; then
-  AGENTS+=("claude:$HOME/.claude/skills:Claude Code")
+ACTUAL_HOME="${TARGET_HOME:-$HOME}"
+
+if [ -d "$ACTUAL_HOME/.claude" ]; then
+  AGENTS+=("claude:$ACTUAL_HOME/.claude/skills:Claude Code")
 fi
-if [ -d "$HOME/.gemini" ] || command -v gemini &>/dev/null; then
-  AGENTS+=("gemini:$HOME/.gemini/skills:Gemini CLI")
+if [ -d "$ACTUAL_HOME/.gemini" ] || command -v gemini &>/dev/null; then
+  AGENTS+=("gemini:$ACTUAL_HOME/.gemini/skills:Gemini CLI")
 fi
-if [ -d "$HOME/.openclaw" ] || command -v openclaw &>/dev/null; then
-  AGENTS+=("openclaw:$HOME/.openclaw/skills:OpenClaw")
+if [ -d "$ACTUAL_HOME/.openclaw" ] || command -v openclaw &>/dev/null; then
+  AGENTS+=("openclaw:$ACTUAL_HOME/.openclaw/skills:OpenClaw")
 fi
-if [ -d "$HOME/.gemini/antigravity" ] || [ -d "$HOME/.antigravity" ]; then
-  AGENTS+=("antigravity:$HOME/.gemini/antigravity/skills:Antigravity")
+if [ -d "$ACTUAL_HOME/.gemini/antigravity" ] || [ -d "$ACTUAL_HOME/.antigravity" ]; then
+  AGENTS+=("antigravity:$ACTUAL_HOME/.gemini/antigravity/skills:Antigravity")
 fi
-if [ -d "$HOME/.codex" ]; then
-  AGENTS+=("codex:$HOME/.codex/skills:Codex CLI")
+if [ -d "$ACTUAL_HOME/.codex" ]; then
+  AGENTS+=("codex:$ACTUAL_HOME/.codex/skills:Codex CLI")
 fi
 
 if [ "${#AGENTS[@]}" -eq 0 ]; then
