@@ -1,32 +1,25 @@
 ---
 name: git-identity
-description: Use when performing any git operation (commit, push, fetch, pull, rebase, merge, cherry-pick, amend) or any GitHub API interaction - ensures all operations use the bot identity instead of personal credentials
+description: Maintain consistent bot identity across code commits, rebases, and local Git operations. Ensures correct name, email, and agent-specific signatures are applied to all git commit objects.
+license: MIT
+metadata:
+  author: leonardo
+  version: "2.1"
 ---
 
-# Git & GitHub Bot Identity
+# Git Bot Identity
 
-All git operations and GitHub API calls must use the `leonardo-github-assist[bot]` identity. Never use personal credentials.
+## Overview
 
-## Bot Identity
+This skill ensures that all local Git operations (commit, rebase, merge, amend) are performed using the unified bot identity, avoiding accidental use of personal accounts.
 
-| Field | Value |
-|-------|-------|
-| Name | `leonardo-github-assist[bot]` |
-| Email | `271226941+leonardo-github-assist[bot]@users.noreply.github.com` |
+**Bot Identity Details**: `leonardo-github-assist[bot]` <`271226941+leonardo-github-assist[bot]@users.noreply.github.com`>
 
-## Per-Agent Configuration
+## 1. Local Git Commit Standards
 
-| Agent | gitconfig 路径 | Co-authored-by |
-|-------|----------------|----------------|
-| Claude Code | `~/.gitconfig.claude` | `Co-authored-by: Claude Code <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
-| Gemini CLI | `~/.gitconfig.gemini` | `Co-authored-by: Gemini CLI <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
-| OpenClaw | `~/.gitconfig.openclaw` | `Co-authored-by: OpenClaw <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
-| Antigravity | `~/.gitconfig.antigravity` | `Co-authored-by: Antigravity <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
-| Codex CLI | `~/.gitconfig.codex` | `Co-authored-by: Codex CLI <271226941+leonardo-github-assist[bot]@users.noreply.github.com>` |
+Every git command involving commit metadata must specify both author and committer. Look up the `{gitconfig}` path and `{co-authored-by}` signature in [agents.md](references/agents.md) for your specific agent.
 
-## Git Commands
-
-Every git command must specify both author and committer. Look up `{gitconfig}` from the Per-Agent Configuration table above.
+### Command Pattern
 
 ```bash
 GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
@@ -34,60 +27,20 @@ GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.
 git -c include.path={gitconfig} <command>
 ```
 
-- `-c include.path` sets the **author** (reads `user.name` / `user.email` from your agent-specific gitconfig)
-- `GIT_COMMITTER_*` sets the **committer** — required for rebase, merge, cherry-pick, and amend which set committer independently
+- **Author**: Automatically applied via `-c include.path` by reading `user.name` / `user.email` from your agent gitconfig.
+- **Committer**: Explicitly set via `GIT_COMMITTER_*` environment variables.
+- **Metadata Note**: Apply this standard to every git command that writes new commit objects (commit, rebase, merge, amend).
 
-Apply to **every** git command without exception.
+## 2. Commit Message Signature
 
-## Commit Message Signature
+Append your agent's **Co-authored-by** line (found in [agents.md](references/agents.md)) to every commit message.
 
-Append your agent's Co-authored-by line (from the table above) to every commit message.
+## 3. Remote Operations (Git Push)
 
-## GitHub API & Remote Operations (Git Push)
+For any operations involving interaction with the GitHub platform (push, fetch, PRs), use the **[github](../github/SKILL.md)** skill instead of this one. This ensures correct token-based authentication.
 
-Never use a personal PAT for API calls or remote Git operations (push/pull/fetch).
+---
 
-### Authentication Flow
+## FAQ & Guidance
 
-1. **Get Token**: Call `mcp__gh-mcp__get_installation_token` to get an Installation Access Token (IAT).
-2. **API Calls**: Set `Authorization: Bearer <IAT>` for all REST/GraphQL requests.
-3. **Git Push/Fetch**: Treat these as GitHub platform operations. Use the IAT in the URL to ensure the bot identity is used and your personal PAT is not leaked.
-
-   ```bash
-   git push https://x-access-token:<IAT>@github.com/<owner>/<repo>.git <branch>
-   ```
-
-### Mental Model
-
-- **Local Git Commands** (commit, rebase, etc.): Use `git -c include.path={gitconfig}` + `GIT_COMMITTER_*` env vars. These affect the **author/committer metadata** on the commit objects.
-- **GitHub Platform Operations** (push, PRs, API): Use the **Installation Access Token (IAT)**. These affect the **authentication and authorization** with GitHub. 
-
-**CRITICAL**: `git push` is a platform interaction. Never rely on the system's global git credentials. Always use the IAT.
-
-### Policies
-
-- **Review Policy**: After creating a Pull Request, you MUST request a review from `@leonardo-zhu` and wait for explicit approval before merging.
-- **PR Merge Policy**: Always use `merge_method: "rebase"` when merging PRs via API.
-
-App ID and Installation ID are pre-configured in the MCP server environment — no manual input needed.
-
-## Examples
-
-Replace `{gitconfig}`, `{co-authored-by}`, and `<IAT>` with your values.
-
-```bash
-# 1. Commit/Rebase/Merge (Local operations - need gitconfig and committer env)
-GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
-GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.com" \
-git -c include.path={gitconfig} commit \
-  -m "feat: add feature" \
-  -m "{co-authored-by}"
-
-# Example for rebase/merge (sets committer)
-GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
-GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.com" \
-git -c include.path={gitconfig} rebase origin/main
-
-# 2. Push (Remote operation - needs IAT)
-git push https://x-access-token:<IAT>@github.com/leonardo-zhu/agent-skills.git main
-```
+For a detailed list of supported agents and their specific configurations, see [Per-Agent Configuration](references/agents.md).
