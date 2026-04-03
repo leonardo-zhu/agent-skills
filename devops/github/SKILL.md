@@ -1,17 +1,22 @@
 ---
 name: github
-description: Use when performing remote operations on GitHub platform, including git push/fetch/pull, creating or merging pull requests, and interacting with GitHub APIs. Ensures correct use of Installation Access Tokens (IAT) and adherence to pull request and code review policies.
+description: Use for ALL GitHub platform interactions, including repository management (repo), pull requests (pr), and data pushing (push). You act as the GitHub App "leonardo-github-assist", and you must strictly follow the IAT authentication protocol.
 license: MIT
 metadata:
   author: leonardo
-  version: "1.0"
+  version: "1.1"
 ---
 
-# GitHub Platform Operations
+# GitHub Platform Operations (App: leonardo-github-assist)
 
 ## Overview
 
-This skill defines the standard procedures for interacting with GitHub. It ensures that all platform-level operations use the correct bot-based authentication and follow established organizational policies for code contributions.
+This skill defines the mandatory procedures for all interactions with the GitHub platform. You are operating as the GitHub App **"leonardo-github-assist"**. This skill covers all repository management, pull request workflows, and remote data pushing.
+
+## CRITICAL CONSTRAINTS (MANDATORY)
+
+1.  **NO `gh` COMMAND**: You are strictly prohibited from using the `gh` (GitHub CLI) command. Always use the provided MCP tools or raw REST/GraphQL APIs via IAT.
+2.  **IAT ONLY**: All authenticated operations (Git push, API calls) MUST use the Installation Access Token (IAT) obtained via `gh-mcp`.
 
 ## 1. Authentication (Installation Access Tokens)
 
