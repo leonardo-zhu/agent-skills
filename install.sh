@@ -99,7 +99,12 @@ echo ""
 
 # Determine which agents are present
 AGENTS=()
-ACTUAL_HOME="${TARGET_HOME:-$HOME}"
+
+if [ -z "${TARGET_HOME:-}" ]; then
+  echo "Error: TARGET_HOME environment variable is required."
+  exit 1
+fi
+ACTUAL_HOME="$TARGET_HOME"
 
 if [ -d "$ACTUAL_HOME/.claude" ]; then
   AGENTS+=("claude:$ACTUAL_HOME/.claude/skills:Claude Code")
