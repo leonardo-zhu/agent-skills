@@ -72,7 +72,7 @@ jobs:
         run: |
           set -euo pipefail
           PORT="${SSH_PORT:-22}"
-          OPTS="-p ${PORT} -o BatchMode=yes -o ConnectTimeout=10 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          OPTS="-o Port=${PORT} -o BatchMode=yes -o ConnectTimeout=10 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
           echo "port=${PORT}" >> "$GITHUB_OUTPUT"
           echo "opts=${OPTS}" >> "$GITHUB_OUTPUT"
 
