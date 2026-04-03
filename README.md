@@ -12,12 +12,24 @@ Skills/
 ├── writing/         # Drafting, editing, summarization
 ├── devops/          # CI/CD, infrastructure, deployment
 ├── productivity/    # Workflows, planning, automation
+├── meta/            # Meta-skills for repository maintenance and creation
 ├── install.sh       # Copy skills into agent config dirs
 ├── uninstall.sh     # Remove copied skills from agent dirs
 └── README.md
 ```
 
 ## Adding a New Skill
+
+The recommended way to create a new skill is using the `skill-creator` meta-skill.
+
+1. Trigger the skill in your AI agent:
+   > "Help me create a new skill for [TASK] in the [CATEGORY] category."
+
+2. Follow the interactive guide to initialize and populate the skill.
+
+### Manual Bootstrap (Alternative)
+
+If you prefer to bootstrap manually, follow these steps:
 
 1. Create the skill directory under the appropriate category:
 
