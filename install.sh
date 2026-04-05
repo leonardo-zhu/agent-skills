@@ -25,7 +25,6 @@ copy_skill() {
   local skill_name
   skill_name="$(basename "$skill_dir")"
 
-  echo "DEBUG: Creating directory $target_base/$skill_name"
   mkdir -p "$target_base/$skill_name"
   rsync -a --delete "$skill_dir/" "$target_base/$skill_name/"
   green "  ✓ $agent_name: $skill_name"
@@ -65,7 +64,6 @@ copy_skill_with_marker() {
   local skill_name
   skill_name="$(basename "$skill_dir")"
 
-  echo "DEBUG: Creating directory $target_base/$skill_name"
   mkdir -p "$target_base/$skill_name"
   rsync -a --delete "$skill_dir/" "$target_base/$skill_name/"
   # Write marker so uninstall/cleanup knows this came from our repo
@@ -111,10 +109,10 @@ ACTUAL_HOME="$TARGET_HOME"
 if [ -d "$ACTUAL_HOME/.claude" ]; then
   AGENTS+=("claude:$ACTUAL_HOME/.claude/skills:Claude Code")
 fi
-if [ -d "$ACTUAL_HOME/.gemini" ] || command -v gemini &>/dev/null; then
+if [ -d "$ACTUAL_HOME/.gemini" ]; then
   AGENTS+=("gemini:$ACTUAL_HOME/.gemini/skills:Gemini CLI")
 fi
-if [ -d "$ACTUAL_HOME/.openclaw" ] || command -v openclaw &>/dev/null; then
+if [ -d "$ACTUAL_HOME/.openclaw" ]; then
   AGENTS+=("openclaw:$ACTUAL_HOME/.openclaw/skills:OpenClaw")
 fi
 if [ -d "$ACTUAL_HOME/.gemini/antigravity" ] || [ -d "$ACTUAL_HOME/.antigravity" ]; then
