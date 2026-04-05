@@ -10,7 +10,7 @@ bold()   { printf '\033[1m%s\033[0m\n' "$1"; }
 
 # Collect all skill names from this repo
 collect_skill_names() {
-  find "$SKILLS_DIR" -name "SKILL.md" \
+  find "$SKILLS_DIR/" -name "SKILL.md" \
     -not -path "*/docs/*" \
     -not -path "*/.git/*" \
     | while IFS= read -r f; do basename "$(dirname "$f")"; done \
@@ -81,7 +81,7 @@ SKILL_COUNT=0
 while IFS= read -r _sd; do
   SKILL_COUNT=$((SKILL_COUNT + 1))
 done < <(
-  find "$SKILLS_DIR" -name "SKILL.md" \
+  find "$SKILLS_DIR/" -name "SKILL.md" \
     -not -path "*/docs/*" \
     -not -path "*/.git/*" \
     | xargs -I{} dirname {} \
@@ -143,7 +143,7 @@ while IFS= read -r skill_dir; do
     copy_skill_with_marker "$skill_dir" "$target_dir" "$agent_name"
   done
 done < <(
-  find "$SKILLS_DIR" -name "SKILL.md" \
+  find "$SKILLS_DIR/" -name "SKILL.md" \
     -not -path "*/docs/*" \
     -not -path "*/.git/*" \
     | xargs -I{} dirname {} \
