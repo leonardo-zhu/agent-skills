@@ -26,7 +26,7 @@ copy_skill() {
   skill_name="$(basename "$skill_dir")"
 
   mkdir -p "$target_base/$skill_name"
-  rsync -a --delete "$skill_dir/" "$target_base/$skill_name/"
+  rsync -rl --delete "$skill_dir/" "$target_base/$skill_name/"
   green "  ✓ $agent_name: $skill_name"
   INSTALLED=$((INSTALLED + 1))
 }
@@ -65,7 +65,7 @@ copy_skill_with_marker() {
   skill_name="$(basename "$skill_dir")"
 
   mkdir -p "$target_base/$skill_name"
-  rsync -a --delete "$skill_dir/" "$target_base/$skill_name/"
+  rsync -rl --delete "$skill_dir/" "$target_base/$skill_name/"
   # Write marker so uninstall/cleanup knows this came from our repo
   echo "$SKILLS_DIR" > "$target_base/$skill_name/.agent-skills-source"
   green "  ✓ $agent_name: $skill_name"
