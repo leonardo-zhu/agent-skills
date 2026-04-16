@@ -9,16 +9,27 @@ Send a message to the user's Telegram chat directly via Bot API.
 
 ## Credentials (pre-configured)
 
-The following environment variables are **already injected** into the agent's environment and you can get them directly.
+The following environment variables are **already injected** and available. Select the matching token based on the current agent's role or domain:
 
-- **Bot token**: `${TELEGRAM_BOT_TOKEN_GITHUB}`
-- **Chat ID**: `${TELEGRAM_CHAT_ID}`
+- **Tokens**:
+    - `${TELEGRAM_BOT_TOKEN_GITHUB}`: Use for GitHub workflows, PR reviews, and DevOps tasks.
+    - `${TELEGRAM_BOT_TOKEN_MAIL}`: Use for email-related agents.
+    - `${TELEGRAM_BOT_TOKEN_WRITING}`: Use for writing, drafting, and content agents.
+    - `${TELEGRAM_BOT_TOKEN_DEFAULT}`: **Fallback** token to use if the agent's domain doesn't match the specific ones above.
+- **Chat ID**: `${TELEGRAM_CHAT_ID}` (common across all bots).
+
+### Selection Logic
+
+1.  Identify the agent's primary task (e.g., GitHub, Writing, Mail).
+2.  Use the corresponding specific token if it exists.
+3.  If no specific token matches, use `${TELEGRAM_BOT_TOKEN_DEFAULT}`.
 
 ## Send a message
 
 ```bash
+# Replace ${BOT_TOKEN} with the variable selected based on logic above
 curl -s -X POST \
-  "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_GITHUB}/sendMessage" \
+  "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
   -d "chat_id=${TELEGRAM_CHAT_ID}&parse_mode=HTML&text=<message>"
 ```
 
