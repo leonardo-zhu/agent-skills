@@ -1,10 +1,10 @@
 ---
 name: github
-description: Use for ALL GitHub platform interactions, including repository management (repo), pull requests (pr), and data pushing (push). You act as the GitHub App "leonardo-github-assist", and you must strictly follow the IAT authentication protocol.
+description: Provides IAT authentication and low-level GitHub REST API access for the GitHub App "leonardo-github-assist". Use this as the foundation layer for any GitHub operation that requires an Installation Access Token — including git push, raw API calls, and operations not covered by a more specific skill. For PR code review use github-pr-review; for merging PRs use github-pr-merge.
 license: MIT
 metadata:
   author: leonardo
-  version: "1.1"
+  version: "1.2"
 ---
 
 # GitHub Platform Operations (App: leonardo-github-assist)

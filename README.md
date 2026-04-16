@@ -8,15 +8,35 @@ Skills follow the [agentskills.io](https://agentskills.io) open standard and wor
 
 ```
 Skills/
-├── coding/          # Code review, refactoring, documentation
-├── writing/         # Drafting, editing, summarization
-├── devops/          # CI/CD, infrastructure, deployment
-├── productivity/    # Workflows, planning, automation
+├── github/          # GitHub platform-specific workflow automation
+├── git/             # Pure Git configurations and tools
+├── communication/   # Notifications and instant messaging
 ├── meta/            # Meta-skills for repository maintenance and creation
+├── productivity/    # Workflows, planning, automation
+├── writing/         # Drafting, editing, summarization
 ├── install.sh       # Copy skills into agent config dirs
 ├── uninstall.sh     # Remove copied skills from agent dirs
 └── README.md
 ```
+
+## Available Skills
+
+### GitHub
+- **[github](./github/github/SKILL.md)**: Foundation layer for GitHub REST API access using IAT.
+- **[github-pr-merge](./github/github-pr-merge/SKILL.md)**: Automated PR merging with Telegram notifications.
+- **[github-pr-review](./github/github-pr-review/SKILL.md)**: Automated PR code review with Telegram notifications.
+
+### Git
+- **[git-identity](./git/git-identity/SKILL.md)**: Maintain consistent bot identity across commits.
+
+### Communication
+- **[telegram-notify](./communication/telegram-notify/SKILL.md)**: Direct Telegram notifications via Bot API.
+
+### Meta
+- **[skill-creator](./meta/skill-creator/SKILL.md)**: Standardized tool for creating and managing Agent Skills.
+
+### Productivity
+- **[banmaxia-store-analytics](./productivity/banmaxia-store-analytics/SKILL.md)**: Daily sales analysis for Banmaxia Liquor Store.
 
 ## Adding a New Skill
 
