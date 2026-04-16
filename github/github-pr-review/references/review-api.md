@@ -1,6 +1,16 @@
 # GitHub PR Review API Reference
 
-## Post a COMMENT review (no issues found)
+## Post an APPROVE review (no issues, author == @leonardo-zhu)
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer <IAT>" \
+  -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/<repo>/pulls/<pr>/reviews \
+  -d '{"event":"APPROVE","body":"LGTM ✅ <中文原因>"}'
+```
+
+## Post a COMMENT review (no issues found, other authors)
 
 ```bash
 curl -s -X POST \

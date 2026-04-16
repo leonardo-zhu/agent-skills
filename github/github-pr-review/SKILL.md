@@ -57,13 +57,16 @@ Review for: bugs, security, performance, error handling, readability, global imp
 
 ### 4. Post GitHub review
 
-See [references/review-api.md](references/review-api.md) for exact API calls for COMMENT and REQUEST_CHANGES.
+**Auto-approve rule:** If `author == @leonardo-zhu` AND no code-level issues found → use `APPROVE` event instead of `COMMENT`. In all other no-issue cases, use `COMMENT`.
 
-### 5. Send Telegram notification directly (telegram-notify skill)
+See [references/review-api.md](references/review-api.md) for exact API calls for APPROVE, COMMENT, and REQUEST_CHANGES.
+
+### 5. Send Telegram notification directly (Using `telegram-notify` skill)
 
 Message format:
 - Issues found: `🔍 已审查 <repo>#<pr> "<pr_title>"，发现 N 个问题，关键：...`
-- Clean: `✅ 已审查 <repo>#<pr> "<pr_title>"，代码无问题，可以 approve。`
+- Clean + auto-approved: `✅ 已审查并 approve <repo>#<pr> "<pr_title>"，代码无问题。`
+- Clean (no auto-approve): `✅ 已审查 <repo>#<pr> "<pr_title>"，代码无问题，可以 approve。`
 - Incremental (mode=incremental): replace `🔍` with `🔄`，prefix with `增量审查`
 
 ### 6. Final log line (for main agent only — NOT sent to Telegram)
@@ -71,5 +74,5 @@ Message format:
 After the Telegram send succeeds, output exactly one line:
 
 ```
-[github-pr-review] done: <repo>#<pr> — <"N issues found" or "clean">
+[github-pr-review] done: <repo>#<pr> — <"N issues found" / "clean" / "clean+approved">
 ```
