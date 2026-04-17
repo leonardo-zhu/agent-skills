@@ -49,14 +49,16 @@ Success: HTTP 200, response contains `"merged": true`.
 
 ### 3. Send Telegram notification (telegram-notify skill)
 
+PR 链接统一使用 HTML 格式：`<a href="https://github.com/<repo>/pull/<pr>"><repo>#<pr></a>`
+
 **On success:**
 ```
-🎉 <repo>#<pr> "<pr_title>" 已 rebase 合并！感谢 @<reviewer> 的 approve。
+🎉 <a href="https://github.com/<repo>/pull/<pr>"><repo>#<pr></a> "<pr_title>" 已 rebase 合并！感谢 @<reviewer> 的 approve。
 ```
 
 **On merge failure (not mergeable):**
 ```
-⚠️ <repo>#<pr> 已 approve 但无法合并，原因：<mergeable_state 或 API 错误信息>。
+⚠️ <a href="https://github.com/<repo>/pull/<pr>"><repo>#<pr></a> 已 approve 但无法合并，原因：<mergeable_state 或 API 错误信息>。
 ```
 
 ### 4. Final log line (for main agent only)
