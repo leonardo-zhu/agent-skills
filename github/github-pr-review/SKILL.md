@@ -139,7 +139,7 @@ curl -s -X PATCH \
   -H "Authorization: Bearer <IAT>" \
   -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/<repo>/check-runs/<check_run_id> \
-  -d '{"status":"completed","conclusion":"action_required","output":{"title":"发现 N 个问题","summary":"<中文摘要>"}}'
+  -d '{"status":"completed","conclusion":"failure","output":{"title":"发现 N 个问题","summary":"<中文摘要>"}}'
 ```
 
 **Clean:**
@@ -167,5 +167,5 @@ PR 链接统一使用 HTML 格式：`<a href="https://github.com/<repo>/pull/<pr
 ### 9. Final log line (for parent agent only)
 
 ```
-[github-pr-review] done: <repo>#<pr> — <"N issues" / "clean" / "clean+approved"> — check: <success/action_required> — threads: <N replied, M resolved>
+[github-pr-review] done: <repo>#<pr> — <"N issues" / "clean" / "clean+approved"> — check: <success/failure> — threads: <N replied, M resolved>
 ```
