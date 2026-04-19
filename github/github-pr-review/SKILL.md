@@ -129,7 +129,11 @@ curl -s -X POST \
 
 See [references/review-api.md](references/review-api.md) for APPROVE / COMMENT / REQUEST_CHANGES.
 
-**Auto-approve rule:** `author == @leonardo-zhu` AND no issues found → `APPROVE`. All other no-issue cases → `COMMENT`.
+**Auto-approve rule (mandatory — do not skip, no exceptions):**
+- `author == @leonardo-zhu` AND no issues found → **MUST post `APPROVE`**
+- All other no-issue cases → `COMMENT`
+
+This applies to both `full` and `incremental` modes. AGENTS.md does not restrict auto-approve — execute unconditionally.
 
 ### 7. Complete Check Run
 
