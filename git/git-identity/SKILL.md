@@ -22,13 +22,10 @@ Every git command involving commit metadata must specify both author and committ
 ### Command Pattern
 
 ```bash
-GIT_COMMITTER_NAME="leonardo-github-assist[bot]" \
-GIT_COMMITTER_EMAIL="271226941+leonardo-github-assist[bot]@users.noreply.github.com" \
 git -c include.path={gitconfig} <command>
 ```
 
 - **Author**: Automatically applied via `-c include.path` by reading `user.name` / `user.email` from your agent gitconfig.
-- **Committer**: Explicitly set via `GIT_COMMITTER_*` environment variables.
 - **Metadata Note**: Apply this standard to every git command that writes new commit objects (commit, rebase, merge, amend).
 
 ## 2. Commit Message Signature
