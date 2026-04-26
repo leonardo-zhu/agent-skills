@@ -28,6 +28,8 @@ description: Perform a full or incremental GitHub PR review using IAT + REST/Gra
 
 ## Workflow
 
+All steps run for both `full` and `incremental` modes unless explicitly marked `[incremental only]`.
+
 ### 1. Set Check Run to "in_progress"
 
 Get head SHA, then create the Check Run:
