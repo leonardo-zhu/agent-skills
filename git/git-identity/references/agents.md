@@ -18,3 +18,12 @@ Below is the required configuration for each Agent supported in this repository.
 | :--- | :--- |
 | **Name** | `leonardo-github-assist[bot]` |
 | **Email** | `271226941+leonardo-github-assist[bot]@users.noreply.github.com` |
+
+## Repository Owner (Co-author)
+
+Every commit from every agent carries the owner's trailer right after the agent's own `Co-authored-by` line, so the commit counts toward the owner's GitHub contributions:
+
+| Field | Value |
+| :--- | :--- |
+| **Co-authored-by** | `Co-authored-by: Leonardo Zhu <leonardo-zhu@qq.com>` |
+| **GitHub account** | `leonardo-zhu` (the email is verified on this account) |
